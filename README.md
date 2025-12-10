@@ -2,6 +2,48 @@
 
 :pushpin: This is an official PyTorch implementation of **U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation**
 
+---
+
+## 🚀 课程设计：U-KAN 复现与改进
+
+本仓库在原论文基础上，完成了 **BUSI 数据集复现** 并提出 **U-KAN+CBAM 改进方案**。
+
+### 实验结果对比
+
+| 模型 | Val Dice | Val IoU | 参数量 |
+|------|----------|---------|--------|
+| U-KAN (Baseline) | 0.7997 | 0.6835 | 6.32M |
+| **U-KAN+CBAM (Ours)** | **0.8062** | **0.6883** | 6.36M |
+| 提升 | **+0.65%** | **+0.70%** | +0.6% |
+
+### 训练曲线对比
+
+| Dice | IoU | Loss |
+|------|-----|------|
+| ![Dice](docs/comparison_dice.png) | ![IoU](docs/comparison_iou.png) | ![Loss](docs/comparison_loss.png) |
+
+### 改进方法
+
+在 U-KAN 的 skip connection 处添加 **CBAM (Convolutional Block Attention Module)** 注意力机制：
+- **通道注意力**：学习哪些特征通道对病灶分割更重要
+- **空间注意力**：学习图像哪些区域是病灶位置
+
+详细报告：
+- [复现报告](docs/BUSI_UKAN_复现报告.md)
+- [改进报告](docs/UKAN_CBAM_改进报告.md)
+
+### 快速开始
+
+```bash
+# 训练 U-KAN+CBAM
+cd Seg_UKAN
+python train.py --arch UKAN_CBAM --dataset BUSI_processed --data_dir ../datasets \
+    --input_w 256 --input_h 256 --batch_size 4 --epochs 200 \
+    --name busi_ukan_cbam --output_dir ../outputs
+```
+
+---
+
 [[`Project Page`](https://yes-u-kan.github.io/)] [[`arXiv`](https://arxiv.org/abs/2406.02918)] [[`BibTeX`](#citation)]
 
 <p align="center">
