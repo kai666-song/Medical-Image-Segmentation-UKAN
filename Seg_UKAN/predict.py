@@ -18,6 +18,7 @@ import archs
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', required=True, help='实验名称')
+    parser.add_argument('--arch', default='UKAN', help='模型架构: UKAN 或 UKAN_CBAM')
     parser.add_argument('--model_path', default=None, help='模型路径，默认使用 outputs/{name}/model.pth')
     parser.add_argument('--data_dir', default='../datasets', help='数据集目录')
     parser.add_argument('--dataset', default='BUSI_processed', help='数据集名称')
@@ -36,10 +37,17 @@ def main():
     result_dir = f'{exp_dir}/predictions'
     os.makedirs(result_dir, exist_ok=True)
     
+    # 自动检测模型架构
+    arch = args.arch
+    if 'cbam' in args.name.lower() and arch == 'UKAN':
+        arch = 'UKAN_CBAM'
+    
     # 加载模型 (使用训练时的 embed_dims=[128, 160, 256])
     print(f'Loading model from {model_path}')
-    model = archs.UKAN(num_classes=1, input_channels=3, deep_supervision=False, 
-                       embed_dims=[128, 160, 256])
+    print(f'Architecture: {arch}')
+    model_class = getattr(archs, arch)
+    model = model_class(num_classes=1, input_channels=3, deep_supervision=False, 
+                        embed_dims=[128, 160, 256])
     model.load_state_dict(torch.load(model_path, map_location='cuda', weights_only=True))
     model = model.cuda()
     model.eval()
