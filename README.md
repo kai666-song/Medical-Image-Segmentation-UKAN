@@ -1,5 +1,12 @@
 # U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation
 
+<p align="center">
+  <a href="https://arxiv.org/abs/2406.02918"><img src="https://img.shields.io/badge/arXiv-2406.02918-b31b1b.svg" alt="arXiv"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://www.python.org/downloads/release/python-390/"><img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="Python 3.9+"></a>
+  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/PyTorch-1.13+-ee4c2c.svg" alt="PyTorch"></a>
+</p>
+
 :pushpin: This is an official PyTorch implementation of **U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation**
 
 ---
@@ -8,7 +15,7 @@
 
 本仓库在原论文基础上，完成了 **BUSI 数据集复现** 并提出 **U-KAN+CBAM 改进方案**。
 
-### 实验结果对比
+### 📊 实验结果对比
 
 | 模型 | Val Dice | Val IoU | 参数量 |
 |------|----------|---------|--------|
@@ -16,31 +23,68 @@
 | **U-KAN+CBAM (Ours)** | **0.8062** | **0.6883** | 6.36M |
 | 提升 | **+0.65%** | **+0.70%** | +0.6% |
 
-### 训练曲线对比
+### 📈 训练曲线对比
 
 | Dice | IoU | Loss |
 |------|-----|------|
-| ![Dice](docs/comparison_dice.png) | ![IoU](docs/comparison_iou.png) | ![Loss](docs/comparison_loss.png) |
+| ![Dice](assets/comparison_dice.png) | ![IoU](assets/comparison_iou.png) | ![Loss](assets/comparison_loss.png) |
 
-### 改进方法
+### 🔬 改进方法
+
+<p align="center">
+  <img src="assets/model_structure.png" alt="U-KAN+CBAM Architecture" width="80%">
+</p>
 
 在 U-KAN 的 skip connection 处添加 **CBAM (Convolutional Block Attention Module)** 注意力机制：
 - **通道注意力**：学习哪些特征通道对病灶分割更重要
 - **空间注意力**：学习图像哪些区域是病灶位置
 
-详细报告：
-- [复现报告](docs/BUSI_UKAN_复现报告.md)
-- [改进报告](docs/UKAN_CBAM_改进报告.md)
+### 📁 项目结构
 
-### 快速开始
+```
+U-KAN/
+├── Seg_UKAN/           # 分割模型代码
+│   ├── archs.py        # 模型架构 (UKAN, UKAN_CBAM)
+│   ├── cbam.py         # CBAM 注意力模块
+│   ├── train.py        # 训练脚本
+│   └── predict.py      # 预测可视化
+├── Diffusion_UKAN/     # 扩散模型代码
+├── scripts/            # 工具脚本
+├── docs/               # 文档和报告
+└── assets/             # 图片资源
+```
+
+### 🚀 快速开始
 
 ```bash
-# 训练 U-KAN+CBAM
+# 1. 克隆仓库
+git clone https://github.com/<your-username>/U-KAN.git
+cd U-KAN
+
+# 2. 创建环境
+conda create -n ukan python=3.9
+conda activate ukan
+pip install -r Seg_UKAN/requirements.txt
+
+# 3. 训练 U-KAN+CBAM
 cd Seg_UKAN
 python train.py --arch UKAN_CBAM --dataset BUSI_processed --data_dir ../datasets \
     --input_w 256 --input_h 256 --batch_size 4 --epochs 200 \
     --name busi_ukan_cbam --output_dir ../outputs
 ```
+
+### 🖼️ 分割效果展示
+
+<p align="center">
+  <img src="assets/sample_result.png" alt="Segmentation Result" width="80%">
+</p>
+
+### 📄 详细文档
+
+| 文档 | 描述 |
+|------|------|
+| [BUSI 数据集复现报告](docs/BUSI_UKAN_复现报告.md) | 数据预处理、训练配置、复现结果 |
+| [U-KAN+CBAM 改进报告](docs/UKAN_CBAM_改进报告.md) | CBAM 模块设计、实验对比分析 |
 
 ---
 
@@ -187,15 +231,19 @@ Please refer to [Diffusion_UKAN](./Diffusion_UKAN/README.md)
 ## 🎈Acknowledgements
 Greatly appreciate the tremendous effort for the following projects!
 - [CKAN](https://github.com/AntonioTepsich/Convolutional-KANs)
+- [CBAM](https://github.com/Jongchan/attention-module) - Convolutional Block Attention Module
 
+## 🤝Contributing
+
+欢迎贡献代码！请查看 [CONTRIBUTING.md](CONTRIBUTING.md) 了解详情。
 
 ## 📜Citation
-If you find this work helpful for your project,please consider citing the following paper:
-```
+If you find this work helpful for your project, please consider citing the following paper:
+```bibtex
 @article{li2024ukan,
   title={U-KAN Makes Strong Backbone for Medical Image Segmentation and Generation},
   author={Li, Chenxin and Liu, Xinyu and Li, Wuyang and Wang, Cheng and Liu, Hengyu and Yuan, Yixuan},
   journal={arXiv preprint arXiv:2406.02918},
   year={2024}
-'''
 }
+```
